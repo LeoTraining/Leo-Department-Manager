@@ -162,10 +162,12 @@ class Leo_Department_Manager {
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_settings' );
 
 		// Additional profile fields
+		$this->loader->add_action( 'user_new_form', $plugin_admin, 'modify_user_fields' );
 		$this->loader->add_action( 'show_user_profile', $plugin_admin, 'modify_user_fields' );
 		$this->loader->add_action( 'edit_user_profile', $plugin_admin, 'modify_user_fields' );
 		$this->loader->add_action( 'personal_options_update', $plugin_admin, 'save_user_fields' );
 		$this->loader->add_action( 'edit_user_profile_update', $plugin_admin, 'save_user_fields' );
+		$this->loader->add_action( 'user_register', $plugin_admin, 'save_user_fields' );
 
 		// Ajax functions
 		$this->loader->add_action( 'wp_ajax_get_departments', $plugin_admin, 'get_departments' );

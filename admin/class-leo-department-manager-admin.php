@@ -377,7 +377,7 @@ class Leo_Department_Manager_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function save_user_fields($user_id) {
+	public function save_user_fields($user_id) {		
 		if ( !current_user_can( 'edit_user', $user_id ) )
 		return FALSE;	
 		update_usermeta( $user_id, 'department', $_POST['department'] );	
