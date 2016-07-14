@@ -369,6 +369,17 @@ class Leo_Department_Manager_Admin {
 	 * @since    1.0.0
 	 */
 	public function modify_user_fields($profile_fields) {
+
+		$user_id = $_GET['user_id'];
+		$is_new_user = $user_id == NULL;
+
+		if(!isset($_GET['user_id'])) {
+			$user_id = wp_get_current_user()->ID;
+		}
+
+		$user_dept = get_user_meta($user_id, 'department', true);
+		$departments = $this->sort_departments(get_option('leo_department_manager_departments')); 
+
 		include __DIR__ . '/partials/leo-department-manager-profile-display.php';
 	}
 
@@ -381,5 +392,12 @@ class Leo_Department_Manager_Admin {
 		if ( !current_user_can( 'edit_user', $user_id ) )
 		return FALSE;	
 		update_usermeta( $user_id, 'department', $_POST['department'] );	
+	}
+
+	public function sort_departments($departments) {		
+		usort($departments, function($a, $b) {
+			return strcmp($a['name'], $b['name']);
+		});
+		return array_values($departments);
 	}
 }
