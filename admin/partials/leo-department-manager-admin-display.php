@@ -14,9 +14,11 @@
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
-<div class="wrap" ng-app="leoDepartmentManager">
+<div class="wrap" ng-app="leoDepartmentManager">	
+
+
 	<form action="options.php" method="post">
-        <?php
+        <?php        	
             settings_fields( $this->plugin_name );
             do_settings_sections( $this->plugin_name );      
         ?>

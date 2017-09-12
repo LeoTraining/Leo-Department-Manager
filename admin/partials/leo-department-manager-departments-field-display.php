@@ -11,6 +11,7 @@
 		<ul>
 			<li ng-repeat="dept in (filteredDepartments = (departments | fuzzyBy: 'name' : departmentSearchTerm | orderBy: 'name' | limitTo: 10))">
 				{{dept.name}} 
+				<a>View</a>
 				<a ng-click="edit(departments.indexOf(dept))">Edit</a>
 				<a ng-click="remove(dept)" class="remove">Remove</a>
 			</li>

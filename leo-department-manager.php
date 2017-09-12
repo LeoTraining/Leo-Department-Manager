@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * The plugin bootstrap file
  *
@@ -29,6 +30,8 @@
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
+
+require(__DIR__ . '/vendor/autoload.php');
 
 /**
  * The code that runs during plugin activation.
@@ -155,10 +158,18 @@ function megan() {
  * @since    1.0.0
  */
 function run_leo_department_manager() {
-
 	$plugin = new Leo_Department_Manager();
 	$plugin->run();
-	// megan();
-
 }
+
 run_leo_department_manager();
+
+$options = [
+	['supports' => ['title']],
+	'public' => true,
+	'has_archive' => true
+];
+
+$project = new CPT('department', $options);
+$project->menu_icon('dashicons-building');	
+

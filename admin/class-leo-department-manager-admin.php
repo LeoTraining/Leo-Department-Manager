@@ -81,10 +81,10 @@ class Leo_Department_Manager_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/leo-department-manager-admin.css', array(), $this->version, 'all' );
-
+			
+		if($_GET['page'] == 'leo_department_manager_admin') {
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/leo-department-manager-admin.css', array(), $this->version, 'all' );	
+		}		
 	}
 
 	/**
@@ -377,8 +377,13 @@ class Leo_Department_Manager_Admin {
 			$user_id = wp_get_current_user()->ID;
 		}
 
-		$user_dept = get_user_meta($user_id, 'department', true);
-		$departments = $this->sort_departments(get_option('leo_department_manager_departments')); 
+		$q = new WP_Query([
+			'post_type' => 'department',
+			'posts_per_page' => -1
+		]);
+		$user_dept = get_user_meta($user_id, '_department', true);
+		$is_deptartment_head = (bool) get_user_meta($user_id, '_is_department_head', true);
+		$departments = $q->posts;
 
 		include __DIR__ . '/partials/leo-department-manager-profile-display.php';
 	}
@@ -391,7 +396,9 @@ class Leo_Department_Manager_Admin {
 	public function save_user_fields($user_id) {		
 		if ( !current_user_can( 'edit_user', $user_id ) )
 		return FALSE;	
-		update_usermeta( $user_id, 'department', $_POST['department'] );	
+
+		update_usermeta( $user_id, '_department', $_POST['department'] );	
+		update_usermeta( $user_id, '_is_department_head', $_POST['is_department_head'] == 'on');
 	}
 
 	public function sort_departments($departments) {		
@@ -399,5 +406,116 @@ class Leo_Department_Manager_Admin {
 			return strcmp($a['name'], $b['name']);
 		});
 		return array_values($departments);
+	}
+
+	public function post_columns($columns) {	
+		$columns['is_active'] = 'Active?';
+		$columns['officer_count'] = 'Officer count';
+		return $columns;
+	}
+
+	private function get_dept_users($dept_id) {
+		return get_users([
+				'meta_key'     => '_department',
+				'meta_value'   => $dept_id,
+				'meta_compare' => '=',
+			]);
+	}
+
+	public function custom_post_column_types($column, $post_id) {
+		if ($column === 'officer_count') {		
+			echo count($this->get_dept_users($post_id));			
+		}
+
+		if($column === 'is_active') {						
+			$is_active = get_post_meta($post_id, '_active',  true);			
+			$dept_name = get_the_title($post_id);			
+			include __DIR__ . '/partials/leo-department-manager-active-column.php';
+		}
+	}
+
+	/*
+	 * After inserting all the new departments as a post type, run this function
+	 */
+	public function convert_to_department_post_type() {		
+
+		$oldDepartments = get_option('leo_department_manager_departments');
+		$od_arr = [];		
+		foreach($oldDepartments as $od) {
+			$od_arr[$od['id']] = $od['name'];
+		}
+
+		$users = get_users();
+		echo '<pre>';
+		foreach($users as $u) {
+
+			$oldDeptId = get_user_meta($u->ID, 'department', true);
+			
+			if($oldDeptId == '') {
+				continue;
+			}
+			
+			$newDept = get_page_by_title($od_arr[intval($oldDeptId)], 'OBJECT', 'department');			
+			update_usermeta( $u->ID, '_department', $newDept->ID );
+
+			 echo 'Updated ' . $u->user_email . ' to deptartment ' . $newDept->post_title . '. <br />';
+		}
+
+		echo '</pre>'; exit();
+	}
+
+	public function toggle_active_department() {		
+		$id = $_GET['dept_id'];
+		$is_active = (bool) get_post_meta($id, '_active' , true);		
+		$users = $this->get_dept_users($id);		
+
+		update_post_meta( $id, '_active', !$is_active);
+		
+		foreach ($users as $u) {			
+			$activate = !$is_active;		
+			if($activate) {
+				$u->remove_role('subscriber');
+				$u->add_role('s2member_level4');
+			} else {
+				$u->remove_role('s2member_level4');
+				$u->add_role('subscriber');
+			}						
+		}
+
+		wp_redirect($_SERVER['HTTP_REFERER']); exit();		
+	}
+
+	public function toggle_department_head() {
+		$user_id = $_GET['user_id'];
+		$is_dept_head = (bool) get_user_meta($user_id, '_is_department_head', true);
+		update_usermeta( $user_id, '_is_department_head', !$is_dept_head );
+		wp_redirect($_SERVER['HTTP_REFERER']); exit();		
+	}
+
+	public function department_edit_markup($post_type, $post) {
+		add_meta_box('department_users', 'Department Users', [$this, 'department_users_metabox'], 'department', 'normal');
+		add_meta_box('toggle_all_user_roles', 'Activate / Deactivate', [$this, 'activate_deactivate_metabox'], 'department', 'normal');		
+	}
+	
+	public function activate_deactivate_metabox($post, $metabox) {
+		$post_id = $post->ID;
+		$is_active = get_post_meta($post_id, '_active',  true);			
+		$dept_name = get_the_title($post_id);		
+		include __DIR__ . '/partials/leo-department-manager-active-column.php';
+	}
+	
+	public function department_users_metabox($post, $metabox) {
+	
+		$users = $this->get_dept_users($post->ID);		
+		require(__DIR__ .'/../includes/partials/leo-department-manager-user-management-table.php'); 
+
+		?><style>
+			#edit-slug-box,
+			#postdivrich,
+			#gdd_page_redirect,
+			#ws-plugin--s2member-security {
+				display: none;
+			}
+		</style><?php		
 	}
 }

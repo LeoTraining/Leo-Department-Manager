@@ -98,6 +98,15 @@ class Leo_Department_Manager_Public {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/leo-department-manager-public.js', array( 'jquery' ), $this->version, false );
 
-	}
+	}	
 
+	public function department_single_template($template) {		
+		global $post;
+
+	     if ($post->post_type == 'department') {
+	          $template = dirname( __FILE__ ) . '/partials/leo-department-manager-public-display.php';	          
+	     }
+
+	     return $template;
+	}
 }

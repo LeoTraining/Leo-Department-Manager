@@ -105,7 +105,7 @@ p.description {
     margin: 1em 0;
 }
 
-input[type="text"] {
+.department-list input[type="text"] {
     width: 100%;
 }
 

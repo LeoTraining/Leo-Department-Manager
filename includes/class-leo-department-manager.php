@@ -27,6 +27,20 @@
  * @subpackage Leo_Department_Manager/includes
  * @author     Nate Hobi <nate.hobi@gmail.com>
  */
+
+
+add_action('init', 'register_department_post_type');
+function register_department_post_type() {
+	$depts = new CPT(array(
+		'post_type_name' => 'department',
+		'singular' => 'Department',
+		'plural' => 'Departments',
+		'slug' => 'departments'
+	));
+
+	$depts->menu_icon("dashicons-book-alt");	
+}
+
 class Leo_Department_Manager {
 
 	/**
@@ -150,9 +164,9 @@ class Leo_Department_Manager {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Leo_Department_Manager_Admin( $this->get_plugin_name(), $this->get_version() );
-
+	
 		// Display admin page
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'display_admin_page' );
+		// $this->loader->add_action( 'admin_menu', $plugin_admin, 'display_admin_page' );
 
 		// Scripts and styles
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -174,6 +188,18 @@ class Leo_Department_Manager {
 		$this->loader->add_action( 'wp_ajax_get_users', $plugin_admin, 'get_users' );
 		$this->loader->add_action( 'wp_ajax_remove_department', $plugin_admin, 'remove_department' );
 		$this->loader->add_action( 'wp_ajax_update_user_department', $plugin_admin, 'update_user_department' );
+
+		// Admin post functions
+		$this->loader->add_action('admin_post_toggle_active_department', $plugin_admin, 'toggle_active_department');
+		$this->loader->add_action('admin_post_toggle_department_head', $plugin_admin, 'toggle_department_head');		
+
+		// Custom Post Type List Column stuff
+		$this->loader->add_filter('manage_department_posts_columns', $plugin_admin, 'post_columns');		
+		$this->loader->add_action('manage_department_posts_custom_column', $plugin_admin, 'custom_post_column_types', 10, 2);
+
+		$this->loader->add_action('add_meta_boxes_department', $plugin_admin, 'department_edit_markup');
+
+
 	}
 
 	/**
@@ -189,7 +215,11 @@ class Leo_Department_Manager {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action( 'single_template', $plugin_public, 'department_single_template' );
 
+		$this->loader->add_action('admin_post_nopriv_create_new_dept_user', $plugin_public, 'create_new_dept_user');
+
+		
 	}
 
 	/**
