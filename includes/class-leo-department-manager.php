@@ -216,10 +216,11 @@ class Leo_Department_Manager {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		$this->loader->add_action( 'single_template', $plugin_public, 'department_single_template' );
-
-		$this->loader->add_action('admin_post_nopriv_create_new_dept_user', $plugin_public, 'create_new_dept_user');
-
-		
+		$this->loader->add_action( 'archive_template', $plugin_public, 'department_list_template' );
+		 
+		// Admin post functions
+		$this->loader->add_action('admin_post_create_new_dept_user', $plugin_public, 'create_new_dept_user');
+		$this->loader->add_action('admin_post_nopriv_create_new_dept_user', $plugin_public, 'create_new_dept_user');		
 	}
 
 	/**

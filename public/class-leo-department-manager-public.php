@@ -109,4 +109,18 @@ class Leo_Department_Manager_Public {
 
 	     return $template;
 	}
+
+	public function department_list_template($archive_template) {		
+		global $post;
+
+	    if ($post->post_type == 'department') {
+         	wp_redirect(site_url());
+	    }
+
+	     return $archive_template;
+	}
+
+	public function create_new_dept_user() {
+		echo '<pre>'; var_dump($_SERVER); echo '</pre>'; exit();
+	}
 }
