@@ -28,10 +28,12 @@ input.public-signup-link {
 }
 
 .modal {
+	display: none;
 	position: fixed;
 	top:0; bottom: 0; left: 0; right: 0;
 	background-color: rgba(255, 255, 255, .8);	
 	padding: 10em 3em;
+    z-index: 1000000000;
 }
 
 .modal .inner {
