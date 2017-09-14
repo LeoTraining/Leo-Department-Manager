@@ -437,9 +437,26 @@ class Leo_Department_Manager_Admin {
 	/*
 	 * After inserting all the new departments as a post type, run this function
 	 */
-	public function convert_to_department_post_type() {		
+	public function upgrade() {		
+		$q = new WP_Query(['post_type' => 'department']);
 
+		if(count($q->posts) !== 0) {			
+			return;
+		}
+		
 		$oldDepartments = get_option('leo_department_manager_departments');
+		$departmentHeads = [];
+		
+
+		foreach($oldDepartments as $od) {	
+			foreach($od['departmentHeads'] as $h) {
+				$departmentHeads[] = intval($h);							
+			}
+
+			$post_id = wp_insert_post(['post_title' => $od['name'], 'post_type' => 'department', 'post_status' => 'publish']);				
+			update_post_meta($post_id, '_active' , true);
+		}
+		
 		$od_arr = [];		
 		foreach($oldDepartments as $od) {
 			$od_arr[$od['id']] = $od['name'];
@@ -458,7 +475,11 @@ class Leo_Department_Manager_Admin {
 			$newDept = get_page_by_title($od_arr[intval($oldDeptId)], 'OBJECT', 'department');			
 			update_usermeta( $u->ID, '_department', $newDept->ID );
 
-			 echo 'Updated ' . $u->user_email . ' to deptartment ' . $newDept->post_title . '. <br />';
+			if(in_array($u->ID, $departmentHeads)) {
+				update_usermeta( $u->ID, '_is_department_head', true );
+			}
+
+			echo 'Updated ' . $u->user_email . ' to deptartment ' . $newDept->post_title . '. <br />';
 		}
 
 		echo '</pre>'; exit();
@@ -504,8 +525,7 @@ class Leo_Department_Manager_Admin {
 		include __DIR__ . '/partials/leo-department-manager-active-column.php';
 	}
 	
-	public function department_users_metabox($post, $metabox) {
-	
+	public function department_users_metabox($post, $metabox) {	
 		$users = $this->get_dept_users($post->ID);		
 		require(__DIR__ .'/../includes/partials/leo-department-manager-user-management-table.php'); 
 

@@ -28,19 +28,6 @@
  * @author     Nate Hobi <nate.hobi@gmail.com>
  */
 
-
-add_action('init', 'register_department_post_type');
-function register_department_post_type() {
-	$depts = new CPT(array(
-		'post_type_name' => 'department',
-		'singular' => 'Department',
-		'plural' => 'Departments',
-		'slug' => 'departments'
-	));
-
-	$depts->menu_icon("dashicons-book-alt");	
-}
-
 class Leo_Department_Manager {
 
 	/**
@@ -164,7 +151,9 @@ class Leo_Department_Manager {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Leo_Department_Manager_Admin( $this->get_plugin_name(), $this->get_version() );
-	
+		
+		$this->loader->add_action('init', $plugin_admin, 'upgrade');
+
 		// Display admin page
 		// $this->loader->add_action( 'admin_menu', $plugin_admin, 'display_admin_page' );
 
@@ -192,13 +181,13 @@ class Leo_Department_Manager {
 		// Admin post functions
 		$this->loader->add_action('admin_post_toggle_active_department', $plugin_admin, 'toggle_active_department');
 		$this->loader->add_action('admin_post_toggle_department_head', $plugin_admin, 'toggle_department_head');		
+		$this->loader->add_action('admin_post_nopriv_toggle_department_head', $plugin_admin, 'toggle_department_head');		
 
 		// Custom Post Type List Column stuff
 		$this->loader->add_filter('manage_department_posts_columns', $plugin_admin, 'post_columns');		
 		$this->loader->add_action('manage_department_posts_custom_column', $plugin_admin, 'custom_post_column_types', 10, 2);
 
 		$this->loader->add_action('add_meta_boxes_department', $plugin_admin, 'department_edit_markup');
-
 
 	}
 
