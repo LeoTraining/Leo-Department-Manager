@@ -20,6 +20,13 @@
 	#dept_user_table .department-admin {
 		background: #daf1ff !important;		
 	}
+
+	#cancel,
+	#cancel:focus,
+	#cancel:hover, {
+		background-color: #ddd;
+		color: #666;
+	}
 </style>
 <table id="dept_user_table">
 	<thead>
@@ -78,20 +85,51 @@
 			<td><?=$display_date ?></td>
 			<td><?=$login_count ?></td>
 			<td>
-				<?php if($is_admin) : ?>
-					
+				<?php if($is_admin) : ?>					
 					<span style="color: #1abc9c">Department admin<span><br />
-					<a href="/wp-admin/admin-post.php?action=toggle_department_head&user_id=<?=$u->ID ?>" confirm-demote>Demote to normal user</a>
-					
+					<a href="/wp-admin/admin-post.php?action=toggle_department_head&user_id=<?=$u->ID ?>" confirm confirm-message="Normal users cannot: <br /> - View all quiz results from department users<br /> - Invite/add other users to join department" confirm-heading="Demote <?=$u->first_name?> <?=$u->last_name?> to normal user">Demote to normal user</a>					
 				<?php else: ?>		
 					Normal user<br />
-					<a href="/wp-admin/admin-post.php?action=toggle_department_head&user_id=<?=$u->ID ?>" confirm-promote>Promote to department admin</a>
+					<a href="/wp-admin/admin-post.php?action=toggle_department_head&user_id=<?=$u->ID ?>" confirm confirm-message="Admins can: <br /> - View all quiz results from department users<br /> - Invite/add other users to join department" confirm-heading="Promote <?=$u->first_name?> <?=$u->last_name?> to department admin">Promote to department admin</a>
 				<?php endif; ?>
 			</td>
 			<td>
-				<a href="/wp-admin/admin-post.php?action=delete_user&user_id=<?=$u->ID ?>" confirm-delete style="color: #c0392b">Delete user</a>
+				<a href="/wp-admin/admin-post.php?action=delete_user&user_id=<?=$u->ID ?>" confirm confirm-message="Deleting a user will remove them from this department and the CourtSmart system. You will need to readd or reinvite them to have them on your roster again." confirm-heading="Delete <?=$u->first_name?> <?=$u->last_name?>" style="color: #c0392b">Delete</a>
 			</td>	
 		</tr>
-		<?php endforeach; ?>
+		<?php endforeach; ?>		
 	</tbody>
 </table>
+
+<?php if(!is_admin()) : ?>
+	<div class="modal" id="confirm-modal">
+		<div class="inner">
+			<span class="modal-close-button">&times;</span>
+			<h3 id="modal-title"></h3>
+			<p id="modal-explination"></p>
+			<a href="#" id="cancel" class="custom-button">Cancel</a>
+			<a href="#" id="confirm" class="custom-button" style="float: right;">Yes</a>
+		</div>
+	</div>
+<script type="text/javascript">
+(function($){
+	$('[confirm]').click(function(e) {
+		e.preventDefault();
+		var href = $(this).attr('href'),
+			headingText = $(this).attr('confirm-heading'),
+			text = $(this).text();
+			message = $(this).attr('confirm-message');
+
+		$('#confirm').attr('href', href).text('Yes, ' + text);
+		$('#modal-title').text(headingText);
+		$('#modal-explination').html(message);
+		$('#confirm-modal').fadeIn();
+	});
+
+	$('#cancel').click(function(e){
+		e.preventDefault();
+		$(this).closest('.modal').fadeOut();
+	});
+})(jQuery);
+</script>
+<?php endif; ?>
