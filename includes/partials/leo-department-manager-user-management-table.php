@@ -78,11 +78,11 @@
 			<td><?=$login_count ?></td>
 			<td>
 				<?php if($is_admin) : ?>
-					<span style="color: #1abc9c">Department head<span><br />
+					<span style="color: #1abc9c">Department admin<span><br />
 					<a href="/wp-admin/admin-post.php?action=toggle_department_head&user_id=<?=$u->ID ?>">Demote to normal user</a>
 				<?php else: ?>		
 					Normal user<br />
-					<a href="/wp-admin/admin-post.php?action=toggle_department_head&user_id=<?=$u->ID ?>">Promote to department head</a>
+					<a href="/wp-admin/admin-post.php?action=toggle_department_head&user_id=<?=$u->ID ?>">Promote to department admin</a>
 				<?php endif; ?>
 			</td>
 		</tr>
