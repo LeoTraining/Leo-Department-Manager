@@ -27,11 +27,14 @@
 		<th>Status</th>
 	</thead>
 	<tbody>
-		<?php foreach($users as $u) :
+		<?php 
+		global $wpdb;
+		
+		foreach($users as $u) :		
 			$is_admin = (bool) get_user_meta($u->ID, '_is_department_head', true);
-			$registration_time = reset(get_user_meta($u->ID, 'wp_s2member_paid_registration_times', true));
+			$registration_time = reset(get_user_meta($u->ID, $wpdb->prefix . 's2member_paid_registration_times', true));
 			$display_date = date('F d, Y', $registration_time); 
-			$login_count = get_user_meta($u->ID, 'wp_s2member_login_counter', true);
+			$login_count = get_user_meta($u->ID, $wpdb->prefix . 's2member_login_counter', true);
 			$roles_str = '';
 			$s2_options = get_option('ws_plugin__s2member_options');
 			
@@ -57,9 +60,14 @@
 			if($login_count == '') {
 				$login_count = '―';
 			}  ?>
-
 		<tr>
-			<td><a href="/wp-admin/user-edit.php?user_id=<?=$u->ID?>"><?=$u->first_name?> <?=$u->last_name?></a></td>
+			<td>
+				<?php if(in_array('administrator', wp_get_current_user()->roles)) : ?>
+				<a href="/wp-admin/user-edit.php?user_id=<?=$u->ID?>"><?=$u->first_name?> <?=$u->last_name?></a>
+				<?php else: ?>
+					<?=$u->first_name?> <?=$u->last_name?>
+				<?php endif; ?>
+			</td>
 			<td><?=$u->user_email?></td>
 			<td><?=$roles_str?></td>
 			<td><?=$display_date ?></td>
