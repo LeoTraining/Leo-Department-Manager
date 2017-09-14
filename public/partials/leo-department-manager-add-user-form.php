@@ -59,10 +59,14 @@
 
 <div class="register-dept-user">
 
-<?php if($_GET['success'] == null || intval($_GET['success']) == 0) : ?>
+<?php if($_GET['success'] == null || intval($_GET['success']) == 0 || is_user_logged_in()) : ?>
 	<h3>Register for <?=$post->post_title ?></h3>
 
-	<form method="POST" data-error-message="<?=$_GET['message']; ?>">
+	<form method="POST" 
+		<?php if(intval($_GET['success']) == 0) : ?>
+		data-error-message="<?=$_GET['message']; ?>"
+	<?php endif; ?>
+		>
 
 		<label>Name</label><br />
 		<input type="text" name="first" placeholder="First" required="required" style="width: 49%;"

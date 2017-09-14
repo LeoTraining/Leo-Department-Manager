@@ -190,7 +190,7 @@ span.message {
 		window.location.hash = '';
 	}
 
-	if(window.location.hash == '#add-user') {
+	if(window.location.hash == '#add-user' && window.location.href.indexOf('success=1') == -1) {
 		$('#add-user').show();			
 	}
 })(jQuery);

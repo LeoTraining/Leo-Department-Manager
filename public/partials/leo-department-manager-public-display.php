@@ -69,6 +69,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		wp_redirect($redirect . '?success=0&message=' . urlencode('There was an issue with your registration. Please contact support.')); exit();
 	}
 
+	wp_new_user_notification($user_id);
+
 
 	wp_update_user(['ID' => $user_id, 'first_name' => $first, 'last_name' => $last]);	
 	update_user_meta( $user_id, '_department', $post->ID);
