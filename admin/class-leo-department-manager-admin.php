@@ -420,7 +420,7 @@ class Leo_Department_Manager_Admin {
 			'meta_value'   => $dept_id,
 			'meta_compare' => '=',
 		]);
-		
+
 		$users_arr = [];
 
 		foreach($users as $u) {
@@ -518,14 +518,14 @@ class Leo_Department_Manager_Admin {
 			}						
 		}
 
-		wp_redirect($_SERVER['HTTP_REFERER']); exit();		
+		wp_redirect($_SERVER['HTTP_ORIGIN'] . $_SERVER['REQUEST_URI']); exit();		
 	}
 
 	public function toggle_department_head() {
 		$user_id = $_GET['user_id'];
-		$is_dept_head = (bool) get_user_meta($user_id, '_is_department_head', true);
+		$is_dept_head = (bool) get_user_meta($user_id, '_is_department_head', true);		
 		update_usermeta( $user_id, '_is_department_head', !$is_dept_head );
-		wp_redirect($_SERVER['HTTP_REFERER']); exit();		
+		wp_redirect($_SERVER['HTTP_ORIGIN'] . $_SERVER['REQUEST_URI']); exit();		
 	}
 
 	public function department_edit_markup($post_type, $post) {
@@ -552,5 +552,23 @@ class Leo_Department_Manager_Admin {
 				display: none;
 			}
 		</style><?php		
+	}
+
+	public function delete_user() {
+		$user_id = $_GET['user_id'];
+		$cu = wp_get_current_user();
+		
+		if(
+			(in_array('administrator', $cu->roles) || (bool) get_user_meta($user_id, '_is_department_head', true))
+			&& $cu->ID != $user_id
+		) {			
+			wp_delete_user($user_id);
+			wp_redirect($_SERVER['HTTP_REFERER']); exit();	
+
+		} else {
+			global $wp_query;
+		    $wp_query->set_404();
+		    status_header(404);
+		}
 	}
 }

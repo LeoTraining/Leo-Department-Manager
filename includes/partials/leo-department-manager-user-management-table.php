@@ -29,6 +29,7 @@
 		<th>Registration Date</th>
 		<th># of logins</th>
 		<th>Status</th>
+		<th></th>
 	</thead>
 	<tbody>
 		<?php 
@@ -78,13 +79,18 @@
 			<td><?=$login_count ?></td>
 			<td>
 				<?php if($is_admin) : ?>
+					
 					<span style="color: #1abc9c">Department admin<span><br />
-					<a href="/wp-admin/admin-post.php?action=toggle_department_head&user_id=<?=$u->ID ?>">Demote to normal user</a>
+					<a href="/wp-admin/admin-post.php?action=toggle_department_head&user_id=<?=$u->ID ?>" confirm-demote>Demote to normal user</a>
+					
 				<?php else: ?>		
 					Normal user<br />
-					<a href="/wp-admin/admin-post.php?action=toggle_department_head&user_id=<?=$u->ID ?>">Promote to department admin</a>
+					<a href="/wp-admin/admin-post.php?action=toggle_department_head&user_id=<?=$u->ID ?>" confirm-promote>Promote to department admin</a>
 				<?php endif; ?>
 			</td>
+			<td>
+				<a href="/wp-admin/admin-post.php?action=delete_user&user_id=<?=$u->ID ?>" confirm-delete style="color: #c0392b">Delete user</a>
+			</td>	
 		</tr>
 		<?php endforeach; ?>
 	</tbody>

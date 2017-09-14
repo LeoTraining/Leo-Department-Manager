@@ -182,7 +182,8 @@ class Leo_Department_Manager {
 		$this->loader->add_action('admin_post_toggle_active_department', $plugin_admin, 'toggle_active_department');
 		$this->loader->add_action('admin_post_toggle_department_head', $plugin_admin, 'toggle_department_head');		
 		$this->loader->add_action('admin_post_nopriv_toggle_department_head', $plugin_admin, 'toggle_department_head');		
-
+		$this->loader->add_action('admin_post_delete_user', $plugin_admin, 'delete_user');		
+		
 		// Custom Post Type List Column stuff
 		$this->loader->add_filter('manage_department_posts_columns', $plugin_admin, 'post_columns');		
 		$this->loader->add_action('manage_department_posts_custom_column', $plugin_admin, 'custom_post_column_types', 10, 2);
