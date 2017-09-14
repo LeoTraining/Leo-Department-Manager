@@ -415,12 +415,27 @@ class Leo_Department_Manager_Admin {
 	}
 
 	private function get_dept_users($dept_id) {
-		return get_users([
-				'meta_key'     => '_department',
-				'meta_value'   => $dept_id,
-				'meta_compare' => '=',
-			]);
+		$users = get_users([
+			'meta_key'     => '_department',
+			'meta_value'   => $dept_id,
+			'meta_compare' => '=',
+		]);
+		
+		$users_arr = [];
+
+		foreach($users as $u) {
+			$is_admin = (bool) get_user_meta($u->ID, '_is_department_head', true);
+
+			if($is_admin) {				
+				array_unshift($users_arr, $u);
+			} else {
+				$users_arr[] = $u;
+			}
+		}
+
+		return $users_arr;
 	}
+
 
 	public function custom_post_column_types($column, $post_id) {
 		if ($column === 'officer_count') {		

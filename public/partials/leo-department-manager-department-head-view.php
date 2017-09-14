@@ -3,7 +3,19 @@ $users = get_users([
 	'meta_key'     => '_department',
 	'meta_value'   => $post->ID,
 	'meta_compare' => '=',
-]); ?>
+]);
+$users_arr = [];
+
+foreach($users as $u) {
+	$is_admin = (bool) get_user_meta($u->ID, '_is_department_head', true);
+
+	if($is_admin) {
+		array_unshift($users_arr, $u);
+	} else {
+		$users_arr[] = $u;
+	}
+}
+$users = $users_arr; ?>
 <style>
 
 input.public-signup-link {
@@ -28,6 +40,7 @@ input.public-signup-link {
 	background: #fff;
 	box-shadow: 0px 5px 16px rgba(0, 0, 0, .2);
 	padding: 2em;
+	position: relative;
 }
 
 .modal .inner input {
@@ -56,6 +69,14 @@ span.message {
 	border: 0;
 	max-width: none;
 	box-shadow: none;
+}
+
+.modal-close-button {
+	cursor: pointer;
+	position: absolute;
+	right: -40px;
+	top: -40px;
+	font-size: 2em;
 }
 
 </style>
@@ -103,6 +124,7 @@ span.message {
 
 <div class="modal" id="add-user">
 	<div class="inner">
+		<span class="modal-close-button">&times;</span>
 		<span class="message" style="display: none;">Successfully added user!</span>		
 		<?php require(__DIR__ . '/leo-department-manager-add-user-form.php'); ?>
 	</div>
@@ -156,6 +178,10 @@ span.message {
 			$('#manage-access').find('input[type="text"]').val('');
 			$('#manage-access').find('form').submit();	
 		}		
+	});
+
+	$('.modal-close-button').click(function(){
+		$(this).closest('.modal').fadeOut();
 	});
 
 	if(window.location.hash == '#updated-valid-domains') {
