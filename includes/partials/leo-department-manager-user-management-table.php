@@ -16,6 +16,10 @@
 	#dept_user_table thead {
 		border-bottom: 1px solid #ddd;
 	}
+
+	#dept_user_table .department-admin {
+		background: #daf1ff !important;		
+	}
 </style>
 <table id="dept_user_table">
 	<thead>
@@ -60,7 +64,7 @@
 			if($login_count == '') {
 				$login_count = '―';
 			}  ?>
-		<tr>
+		<tr style="position: relative;" <?=$is_admin ? 'class="department-admin"' : '' ?>>
 			<td>
 				<?php if(in_array('administrator', wp_get_current_user()->roles)) : ?>
 				<a href="/wp-admin/user-edit.php?user_id=<?=$u->ID?>"><?=$u->first_name?> <?=$u->last_name?></a>

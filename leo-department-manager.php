@@ -177,8 +177,7 @@ add_shortcode( 'manage-department-link' , 'manage_department_link' );
 function manage_department_link() {
 	$user = wp_get_current_user();
 	$is_dept_head = (bool) get_user_meta($user->ID, '_is_department_head', true);
-	$link = get_permalink(get_user_meta($user->ID, '_department', true));
-	// echo '<pre>'; var_dump($is_dept_head); echo '</pre>'; exit();
+	$link = get_permalink(get_user_meta($user->ID, '_department', true));	
 	if($is_dept_head) : 
 		?><style>
 			#manage-department-link {

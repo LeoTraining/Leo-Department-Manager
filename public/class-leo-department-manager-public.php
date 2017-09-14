@@ -118,9 +118,5 @@ class Leo_Department_Manager_Public {
 	    }
 
 	     return $archive_template;
-	}
-
-	public function create_new_dept_user() {
-		echo '<pre>'; var_dump($_SERVER); echo '</pre>'; exit();
-	}
+	}	
 }

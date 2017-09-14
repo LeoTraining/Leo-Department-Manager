@@ -64,15 +64,17 @@ span.message {
 	<div class="clearfix full-width">
 		<h3>Want to add users? <a class="custom-button" href="#add-user" style="float: right;" id="add-user-manually">Add User Manually +</a></h3>
 		<label>Copy/email public sign up link to your department: </label><br />
-		<input disabled="disabled" value="<?php the_permalink(); ?>" style="width: auto;" class="public-signup-link" /> <a class="custom-button" id="manage-access-btn">Manage Access</a><br />
+		<input disabled="disabled" value="<?php the_permalink(); ?>" style="width: auto;" class="public-signup-link" id="public-signup-link" /> 
+		<a class="custom-button" id="copy-signup-link">Copy signup link</a>
+		<!--<a class="custom-button" id="manage-access-btn">Manage Access</a><br />-->
 
-		<small>
+		<!--<small>
 			<?php if($valid_domains) : ?>
 			Sign ups currently allowed for emails with the following domains:&nbsp;&nbsp;&nbsp;<?php foreach($valid_domains as $key => $d) : echo $d . '&nbsp;&nbsp;&nbsp;'; endforeach;?>
 			<?php else : ?>
 			Sign ups are currently allow for <em>any</em> email.
 			<?php endif; ?>
-		</small>
+		</small>-->
 
 		<?php require(__DIR__ .'/../../includes/partials/leo-department-manager-user-management-table.php'); ?>
 	</div>
@@ -120,6 +122,33 @@ span.message {
 		}).insertBefore($(this)).focus();
 	});
 
+	function copy(selector) {
+		var $temp = $("<div style='position: fixed; opacity: 0'>");
+		$("body").append($temp);
+		$temp
+			.attr("contenteditable", true)
+			.html($(selector).val())
+			.select()
+			.on("focus", function() {
+				document.execCommand("selectAll", false, null);
+			})
+			.focus();
+		document.execCommand("copy");
+		$temp.remove();
+	}
+
+	$('#copy-signup-link').click(function(e){	
+		copy('#public-signup-link');
+
+		var $t = $(this);
+		$t.css({'width': $(this).width(true), 'textAlign' : 'center'})
+		$t.text('Copied!');
+
+		window.setTimeout(function(){
+			$t.text('COPY SIGNUP LINK');
+		}, 1000);
+	});
+
 	$('#reset-domains').click(function(e) {
 		e.preventDefault();
 
@@ -134,6 +163,7 @@ span.message {
 		$('#manage-access').find('.message').show();
 		window.location.hash = '';
 	}
+
 	if(window.location.hash == '#add-user') {
 		$('#add-user').show();			
 	}
