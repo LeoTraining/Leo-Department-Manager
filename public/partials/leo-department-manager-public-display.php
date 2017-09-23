@@ -80,7 +80,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$is_paid = true;
 	}
 
-	do_action('leo_user_added', $user, $is_paid);
+	do_action('leo_user_added', $user->ID, $is_paid);
 
 	wp_redirect($redirect . '?success=1&message=' . urlencode("Success! A confirmation email has been sent to $email.")); exit();	
 }
