@@ -44,8 +44,9 @@
 		
 		foreach($users as $u) :		
 			$is_admin = (bool) get_user_meta($u->ID, '_is_department_head', true);
-			$registration_time = reset(get_user_meta($u->ID, $wpdb->prefix . 's2member_paid_registration_times', true));
-			$display_date = date('F d, Y', $registration_time); 
+			$registration_time = $u->user_registered;						
+			$date_array = date_parse($registration_time);
+			$display_date = date('F j, Y', mktime($date_array['hour'], $date_array['minute'], $date_array['second'], $date_array['month'], $date_array['day'], $date_array['year']));
 			$login_count = get_user_meta($u->ID, $wpdb->prefix . 's2member_login_counter', true);
 			$roles_str = '';
 			$s2_options = get_option('ws_plugin__s2member_options');
