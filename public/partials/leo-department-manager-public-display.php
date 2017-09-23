@@ -46,8 +46,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$first = sanitize_text_field($_POST['first']);
 	$last = sanitize_text_field($_POST['last']);
 	$email = sanitize_text_field($_POST['email']);
-	// $p = sanitize_text_field($_POST['password']);
-	// $cp = sanitize_text_field($_POST['confirm_password']);	
+
 	$retain_data = sprintf("&f=%s&l=%s&e=%s", urlencode($first), urlencode($last), urlencode($email));
 
 	if($valid_domains != false && !is_user_logged_in()) {
@@ -56,18 +55,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
 	}
 
-	// if($p != $cp) {
-	// 	wp_redirect($redirect . '?success=0&message=' . urlencode('Passwords do not match') . $retain_data); exit();
-	// }
-
 	if(get_user_by('email', $email) !== FALSE) {
 		wp_redirect($redirect . '?success=0&message=' . urlencode('This email is already in use') . $retain_data); exit();
 	}
 
-	// if(!preg_match('@[A-Z]@', $p) || !preg_match('@[a-z]@', $p) || !preg_match('@[0-9]@', $p) || strlen($p) < 8) {
-	// 	wp_redirect($redirect . '?success=0&message=' . urlencode('Invalid password') . $retain_data); exit();
-	// }
-	
 	$user_id = wp_create_user( $email, wp_generate_password(), $email );
 
 	if(get_class($user_id) == 'WP_Error') {
@@ -79,18 +70,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	wp_update_user(['ID' => $user_id, 'first_name' => $first, 'last_name' => $last]);	
 	update_user_meta( $user_id, '_department', $post->ID);
 
+
+	$is_paid = false;
+
 	if((bool) get_post_meta($post->ID, '_active', true)) {
 		$u = get_user_by('ID', $user_id);
 		$u->add_role('s2member_level4');
 		$u->remove_role('subscriber');
+		$is_paid = true;
 	}
 
-	// if(!is_user_logged_in()) {
-	// 	wp_redirect($redirect . '?success=1&message=' . urlencode('Success! you can now log in with your email and password.')); exit();	
-	// } else {
-	// 	wp_redirect($redirect . '?success=1&message=' . urlencode('You successfully added an officer to your department.')); exit();	
-	// }
-	
+	do_action('leo_user_added', $user, $is_paid);
+
 	wp_redirect($redirect . '?success=1&message=' . urlencode("Success! A confirmation email has been sent to $email.")); exit();	
 }
 
