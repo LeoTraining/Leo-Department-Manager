@@ -78,13 +78,13 @@
 		<input type="email" name="email" placeholder="john.smith@example.com" required="required" 
 			value="<?=isset($_GET['e']) ? $_GET['e'] : '' ?>" />
 
-		<label for="password">Password</label>
+		<!-- <label for="password">Password</label>
 		<input type="password" name="password" placeholder="⬤ ⬤ ⬤ ⬤ ⬤ ⬤" required="required" />
 		<label class="password-hint">Password must have an uppercase letter and a number and be at least 8 characters.</label>
 		
 
 		<label for="confirm_password">Confirm Password</label>
-		<input type="password" name="confirm_password" placeholder="⬤ ⬤ ⬤ ⬤ ⬤ ⬤" required="required" />
+		<input type="password" name="confirm_password" placeholder="⬤ ⬤ ⬤ ⬤ ⬤ ⬤" required="required" /> -->
 
 		<button type="submit">Submit</button>
 	</form>

@@ -1,5 +1,6 @@
 {
     "require": {
-        "jjgrainger/wp-custom-post-type-class": "^1.4"
+        "jjgrainger/wp-custom-post-type-class": "^1.4",
+        "drewm/mailchimp-api": "^2.4"
     }
 }

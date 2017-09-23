@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -525,7 +526,8 @@ class Leo_Department_Manager_Admin {
 		$user_id = $_GET['user_id'];
 		$is_dept_head = (bool) get_user_meta($user_id, '_is_department_head', true);		
 		update_usermeta( $user_id, '_is_department_head', !$is_dept_head );
-		wp_redirect($_SERVER['HTTP_REFERER']); exit();		
+		do_action('updated_user_meta');
+		wp_redirect($_SERVER['HTTP_REFERER']);exit();
 	}
 
 	public function department_edit_markup($post_type, $post) {

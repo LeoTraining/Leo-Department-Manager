@@ -4,9 +4,52 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d321660382438cfefb0893e1d21e65c7",
-    "content-hash": "d68b3af757dfd004d7c82fe297e3ad0a",
+    "hash": "943a803d4dab88692ed7e554cee9b46f",
+    "content-hash": "0de18ca08e2f661455f0f4d9fc5948c9",
     "packages": [
+        {
+            "name": "drewm/mailchimp-api",
+            "version": "v2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/drewm/mailchimp-api.git",
+                "reference": "fe480bb652f85270227bf6d639b0026a531f21fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/drewm/mailchimp-api/zipball/fe480bb652f85270227bf6d639b0026a531f21fc",
+                "reference": "fe480bb652f85270227bf6d639b0026a531f21fc",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.0.*",
+                "vlucas/phpdotenv": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DrewM\\MailChimp\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Drew McLellan",
+                    "email": "drew.mclellan@gmail.com",
+                    "homepage": "http://allinthehead.com/"
+                }
+            ],
+            "description": "Super-simple, minimum abstraction MailChimp API v3 wrapper",
+            "homepage": "https://github.com/drewm/mailchimp-api",
+            "time": "2017-02-16 13:24:20"
+        },
         {
             "name": "jjgrainger/wp-custom-post-type-class",
             "version": "v1.4",

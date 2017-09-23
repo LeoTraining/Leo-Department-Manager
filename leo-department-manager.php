@@ -189,6 +189,3 @@ function manage_department_link() {
 	<a href="<?=$link ?>" class="custom-button" id="manage-department-link">Manage My Department</a><?php 
 	endif; 
 }
-
-
-

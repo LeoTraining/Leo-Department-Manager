@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 /**
  * Provide a public-facing view for the plugin
@@ -13,6 +13,11 @@
  */
 
 global $post;
+
+
+if(!class_exists('c_ws_plugin__s2member_email_configs')) {
+	include plugin_dir_path(__FILE__) . '../../../s2member/src/includes/classes/email-configs.inc.php';
+}
 
 $valid_domains = get_post_meta($post->ID, '_valid_domains', true);
 $redirect = $_SERVER['HTTP_ORIGIN'] . preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
@@ -41,8 +46,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$first = sanitize_text_field($_POST['first']);
 	$last = sanitize_text_field($_POST['last']);
 	$email = sanitize_text_field($_POST['email']);
-	$p = sanitize_text_field($_POST['password']);
-	$cp = sanitize_text_field($_POST['confirm_password']);	
+	// $p = sanitize_text_field($_POST['password']);
+	// $cp = sanitize_text_field($_POST['confirm_password']);	
 	$retain_data = sprintf("&f=%s&l=%s&e=%s", urlencode($first), urlencode($last), urlencode($email));
 
 	if($valid_domains != false && !is_user_logged_in()) {
@@ -51,26 +56,25 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
 	}
 
-	if($p != $cp) {
-		wp_redirect($redirect . '?success=0&message=' . urlencode('Passwords do not match') . $retain_data); exit();
-	}
+	// if($p != $cp) {
+	// 	wp_redirect($redirect . '?success=0&message=' . urlencode('Passwords do not match') . $retain_data); exit();
+	// }
 
 	if(get_user_by('email', $email) !== FALSE) {
 		wp_redirect($redirect . '?success=0&message=' . urlencode('This email is already in use') . $retain_data); exit();
 	}
 
-	if(!preg_match('@[A-Z]@', $p) || !preg_match('@[a-z]@', $p) || !preg_match('@[0-9]@', $p) || strlen($p) < 8) {
-		wp_redirect($redirect . '?success=0&message=' . urlencode('Invalid password') . $retain_data); exit();
-	}
+	// if(!preg_match('@[A-Z]@', $p) || !preg_match('@[a-z]@', $p) || !preg_match('@[0-9]@', $p) || strlen($p) < 8) {
+	// 	wp_redirect($redirect . '?success=0&message=' . urlencode('Invalid password') . $retain_data); exit();
+	// }
 	
-	$user_id = wp_create_user( $email, $p, $email );
+	$user_id = wp_create_user( $email, wp_generate_password(), $email );
 
 	if(get_class($user_id) == 'WP_Error') {
 		wp_redirect($redirect . '?success=0&message=' . urlencode('There was an issue with your registration. Please contact support.')); exit();
 	}
 
-	wp_new_user_notification($user_id);
-
+	c_ws_plugin__s2member_email_configs::new_user_notification($user_id, $p);
 
 	wp_update_user(['ID' => $user_id, 'first_name' => $first, 'last_name' => $last]);	
 	update_user_meta( $user_id, '_department', $post->ID);
@@ -81,12 +85,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$u->remove_role('subscriber');
 	}
 
-	if(!is_user_logged_in()) {
-		wp_redirect($redirect . '?success=1&message=' . urlencode('Success! you can now log in with your email and password.')); exit();	
-	} else {
-		wp_redirect($redirect . '?success=1&message=' . urlencode('You successfully added an officer to your department.')); exit();	
-	}
+	// if(!is_user_logged_in()) {
+	// 	wp_redirect($redirect . '?success=1&message=' . urlencode('Success! you can now log in with your email and password.')); exit();	
+	// } else {
+	// 	wp_redirect($redirect . '?success=1&message=' . urlencode('You successfully added an officer to your department.')); exit();	
+	// }
 	
+	wp_redirect($redirect . '?success=1&message=' . urlencode("Success! A confirmation email has been sent to $email.")); exit();	
 }
 
 get_header(); 
