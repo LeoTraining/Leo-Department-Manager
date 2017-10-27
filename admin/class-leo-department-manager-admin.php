@@ -383,6 +383,7 @@ class Leo_Department_Manager_Admin {
 			'posts_per_page' => -1
 		]);
 		$user_dept = get_user_meta($user_id, '_department', true);
+		$ptbid = get_user_meta($user_id, 'ptbid', true);
 		$is_deptartment_head = (bool) get_user_meta($user_id, '_is_department_head', true);
 		$departments = $q->posts;
 
@@ -398,8 +399,9 @@ class Leo_Department_Manager_Admin {
 		if ( !current_user_can( 'edit_user', $user_id ) )
 		return FALSE;	
 
-		update_usermeta( $user_id, '_department', $_POST['department'] );	
+		update_usermeta( $user_id, '_department', sanitize_text_field($_POST['department']) );	
 		update_usermeta( $user_id, '_is_department_head', $_POST['is_department_head'] == 'on');
+		update_usermeta( $user_id, 'ptbid', sanitize_text_field($_POST['ptbid']));
 	}
 
 	public function sort_departments($departments) {		
@@ -533,7 +535,47 @@ class Leo_Department_Manager_Admin {
 	public function department_edit_markup($post_type, $post) {
 		add_meta_box('department_users', 'Department Users', [$this, 'department_users_metabox'], 'department', 'normal');
 		add_meta_box('toggle_all_user_roles', 'Activate / Deactivate', [$this, 'activate_deactivate_metabox'], 'department', 'normal');		
+		add_meta_box('general_metabox', 'General', [$this, 'general_metabox'], 'department', 'normal');		
 	}
+
+	public function handle_save($id, $post, $update) {
+		if(get_post_type($id)!=='department' || !isset($_POST['organization_id'])) return;
+
+		$org_id = sanitize_text_field($_POST['organization_id']);		
+		$mtu = sanitize_text_field($_POST['mtu']);		
+		update_post_meta($id, 'organization_id' , $org_id);
+		update_post_meta($id, 'mtu' , $mtu);
+	}
+
+	public function general_metabox() {
+		$mtu = get_post_meta($_GET['post'], 'mtu', true);
+		$organization_id = get_post_meta($_GET['post'], 'organization_id', true);
+?>	
+	<table class="form-table">
+		<tr>
+			<th>
+				<label for="organization_id">Organization ID</label>
+			</th>
+			<td>
+				<input type="text" name="organization_id" id="organization_id" value="<?=$organization_id ?>" />
+				<br />			
+			</td>
+		</tr>	
+	</table>
+	<table class="form-table">
+		<tr>
+			<th>
+				<label for="mtu">MTU</label>
+			</th>
+			<td>
+				<input type="text" name="mtu" id="mtu" value="<?=$mtu ?>" />
+				<br />			
+			</td>
+		</tr>	
+	</table>
+<?php
+	}
+
 	
 	public function activate_deactivate_metabox($post, $metabox) {
 		$post_id = $post->ID;

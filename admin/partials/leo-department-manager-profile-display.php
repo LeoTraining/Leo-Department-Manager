@@ -26,6 +26,18 @@
 <table class="form-table">
 	<tr>
 		<th>
+			<label for="ptbid">PTBID</label>
+		</th>
+		<td>
+			<input name="ptbid" id="ptbid" value="<?=$ptbid ?>" />
+			<br />			
+		</td>
+	</tr>	
+</table>
+
+<table class="form-table">
+	<tr>
+		<th>
 			<label for="department">Is Department Head</label>
 		</th>
 		<td>

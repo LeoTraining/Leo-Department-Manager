@@ -189,6 +189,7 @@ class Leo_Department_Manager {
 		$this->loader->add_action('manage_department_posts_custom_column', $plugin_admin, 'custom_post_column_types', 10, 2);
 
 		$this->loader->add_action('add_meta_boxes_department', $plugin_admin, 'department_edit_markup');
+		$this->loader->add_action('save_post', $plugin_admin, 'handle_save');
 
 	}
 
