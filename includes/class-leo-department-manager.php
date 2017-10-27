@@ -150,9 +150,7 @@ class Leo_Department_Manager {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Leo_Department_Manager_Admin( $this->get_plugin_name(), $this->get_version() );
-		
-		$this->loader->add_action('init', $plugin_admin, 'upgrade');
+		$plugin_admin = new Leo_Department_Manager_Admin( $this->get_plugin_name(), $this->get_version() );		
 
 		// Display admin page
 		// $this->loader->add_action( 'admin_menu', $plugin_admin, 'display_admin_page' );
