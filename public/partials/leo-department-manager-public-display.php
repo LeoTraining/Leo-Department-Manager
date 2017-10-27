@@ -46,8 +46,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$first = sanitize_text_field($_POST['first']);
 	$last = sanitize_text_field($_POST['last']);
 	$email = sanitize_text_field($_POST['email']);
+	$ptbid = sanitize_text_field($_POST['ptbid']);
 
-	$retain_data = sprintf("&f=%s&l=%s&e=%s", urlencode($first), urlencode($last), urlencode($email));
+	$retain_data = sprintf("&f=%s&l=%s&e=%s&ptbid=%s", urlencode($first), urlencode($last), urlencode($email), urlencode($ptbid));
 
 	if($valid_domains != false && !is_user_logged_in()) {
 		if(!in_array(explode('@', $email)[1], $valid_domains)) {
@@ -69,7 +70,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	wp_update_user(['ID' => $user_id, 'first_name' => $first, 'last_name' => $last]);	
 	update_user_meta( $user_id, '_department', $post->ID);
-
+	update_user_meta( $user_id, 'ptbid',  $ptbid);
 
 	$is_paid = false;
 

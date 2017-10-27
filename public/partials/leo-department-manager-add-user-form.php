@@ -78,6 +78,9 @@
 		<input type="email" name="email" placeholder="john.smith@example.com" required="required" 
 			value="<?=isset($_GET['e']) ? $_GET['e'] : '' ?>" />
 
+		<label for="ptbid">PTBID</label>
+		<input type="text" required="required" name="ptbid" placeholder="PTBID" id="ptbid" value="<?=isset($_GET['ptbid']) ? $_GET['ptbid'] : '' ?>"/>
+
 		<!-- <label for="password">Password</label>
 		<input type="password" name="password" placeholder="⬤ ⬤ ⬤ ⬤ ⬤ ⬤" required="required" />
 		<label class="password-hint">Password must have an uppercase letter and a number and be at least 8 characters.</label>
