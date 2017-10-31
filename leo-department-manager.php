@@ -189,3 +189,15 @@ function manage_department_link() {
 	<a href="<?=$link ?>" class="custom-button" id="manage-department-link">Manage My Department</a><?php 
 	endif; 
 }
+
+add_shortcode( 'manage-department-link-url' , 'manage_department_link_url' );
+function manage_department_link_url() {
+	$user = wp_get_current_user();
+	$is_dept_head = (bool) get_user_meta($user->ID, '_is_department_head', true);	
+	
+	if(get_user_meta($user->ID, '_department', true) != "" && $is_dept_head) {
+		echo get_permalink(get_user_meta($user->ID, '_department', true));		
+	}
+}
+
+
