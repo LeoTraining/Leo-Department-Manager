@@ -201,17 +201,16 @@ function manage_department_link_url() {
 }
 
 
-function change_password_text() { 	
-	?>
-	<style>
+function change_password_text() { 
+	?><style>
 	#pass-strength-result,.indicator-hint {
 		display: none !important;
 	}
 	</style>
     <script type="text/javascript">
     	document.getElementById('wp-submit').value = 'Set Password';    	    	
-    </script>
-<?php }
+    </script> <?php 
+}
 add_action( 'login_footer', 'change_password_text', 10 );
 
 
