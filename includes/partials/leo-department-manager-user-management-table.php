@@ -51,6 +51,10 @@
 			$roles_str = '';
 			$s2_options = get_option('ws_plugin__s2member_options');
 			
+			if($login_count == '') {
+				$display_date = 'Pending';
+			}
+
 			foreach($u->roles as $r) {
 				if(strlen($roles_str) === 0) {												
 					if(strpos($r, 's2member_') === FALSE) {
