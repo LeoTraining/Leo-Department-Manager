@@ -82,7 +82,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
 
 	do_action('leo_user_added', $user_id, $is_paid);
-	wp_redirect($redirect . '?success=1&message=' . urlencode("Success! A confirmation email has been sent to $email.")); exit();	
+	wp_redirect(explode('#', $redirect)[0] . "#Success!%20A%20confirmation%20email%20has%20been%20sent%20to%20$email."); exit();	
 }
 
 get_header(); 

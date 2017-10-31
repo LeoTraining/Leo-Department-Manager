@@ -27,6 +27,14 @@
 		background-color: #ddd;
 		color: #666;
 	}
+
+	#flash-message {		
+	    background: #239a45;
+	    padding: 1em;
+	    color: #fff;
+	    font-size: 1.15em;
+	    text-align: center;
+	}
 </style>
 <table id="dept_user_table">
 	<thead>
@@ -135,6 +143,16 @@
 		e.preventDefault();
 		$(this).closest('.modal').fadeOut();
 	});
+
+	if(window.location.hash.length > 0) {		
+		var $message = $('<div />').text(decodeURIComponent(window.location.hash.split('#')[1])).attr('id', 'flash-message');
+		$('body').prepend($message);
+		window.location.hash = "";
+
+		setTimeout(function(){
+			$message.slideUp();
+		}, 2000);
+	}
 })(jQuery);
 </script>
 <?php endif; ?>

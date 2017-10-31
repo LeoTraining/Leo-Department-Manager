@@ -611,7 +611,7 @@ class Leo_Department_Manager_Admin {
 
 		if(($isDeptHead && $userToDeleteBelongsToDepartmentHead) || $isSuperAdmin) {			
 			wp_delete_user($userToDelete);
-			wp_redirect($_SERVER['HTTP_REFERER']); exit();	
+			wp_redirect($_SERVER['HTTP_REFERER'] . '#Successfully%20deleted%20user.'); exit();	
 		} else {			
 			global $wp_query;
 		    $wp_query->set_404();
