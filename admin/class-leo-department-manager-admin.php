@@ -599,17 +599,20 @@ class Leo_Department_Manager_Admin {
 	}
 
 	public function delete_user() {
-		$user_id = $_GET['user_id'];
-		$cu = wp_get_current_user();
-		
-		if(
-			(in_array('administrator', $cu->roles) || (bool) get_user_meta($user_id, '_is_department_head', true))
-			&& $cu->ID != $user_id
-		) {			
-			wp_delete_user($user_id);
-			wp_redirect($_SERVER['HTTP_REFERER']); exit();	
+		$userToDelete = $_GET['user_id'];
+		$currentUser = wp_get_current_user();
 
-		} else {
+		$isDeptHead = (bool) get_user_meta($currentUser->ID, '_is_department_head', true);
+		$isSuperAdmin = in_array('administrator', $currentUser->roles);
+
+		$userToDeleteBelongsToDepartmentHead = 
+			get_user_meta($userToDelete, '_department', true) ==
+			get_user_meta($currentUser->ID, '_department', true);
+
+		if(($isDeptHead && $userToDeleteBelongsToDepartmentHead) || $isSuperAdmin) {			
+			wp_delete_user($userToDelete);
+			wp_redirect($_SERVER['HTTP_REFERER']); exit();	
+		} else {			
 			global $wp_query;
 		    $wp_query->set_404();
 		    status_header(404);
