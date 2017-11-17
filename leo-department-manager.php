@@ -208,7 +208,9 @@ function change_password_text() {
 	}
 	</style>
     <script type="text/javascript">
-    	document.getElementById('wp-submit').value = 'Set Password';    	    	
+		if(document.title.indexOf("Reset Password") > -1) {
+			document.getElementById('wp-submit').value = 'Set Password';    	    	
+		}    	
     </script> <?php 
 }
 add_action( 'login_footer', 'change_password_text', 10 );
